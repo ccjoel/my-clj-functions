@@ -20,6 +20,12 @@
        distinct
        (into [])))
 
+(defn parse-str
+  "parses string into a valid number or symbol
+we only need to parse numbers.. could also use Integer/parseInt .. needs string input.
+  "
+  [i]
+  (clojure.edn/read-string i))
 
 ;; String s = StringEscapeUtils.unescapeJava("\\u00f0\\u009f\\u0092\\u00a9");
 (defn unescape-java
