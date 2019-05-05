@@ -21,22 +21,18 @@
    also has the precondition of being multiples of three..?
   "
   [v]
+  {:pre [(odd? (count v))]}
 
-  ;; {:pre [(odd? (count v))]}
+  (if (= (count v) 1)
+    (first v)
 
-  (if (not (odd? (count v)))
-    0 ;; TODO hack to return something valid in the meantime...
+    (let [[a op b & rest] v
+          result (@(resolve op) a b)] ;; received + and - operators as symbols to resolve, easier to print
+      (if (nil? rest)
+        result
+        (recur (conj rest result))))))
 
-    (if (= (count v) 1)
-      (first v)
-
-      (let [[a op b & rest] v
-            result (@(resolve op) a b)]
-        (if (nil? rest)
-          result
-          (recur (conj rest result)))))))
-
-#_[123 + 4 - 5 + 67 - 89]
+#_[123 + 4 - 5 + 67 - 89] ; = 100
 
 (defn chars->str
   "Given a collection of characters, return a concat string"
