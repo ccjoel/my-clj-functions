@@ -50,6 +50,17 @@ user> (apply str (reverse "123"))
 (type 1)
 => java.lang.Long
 
+#_(defmacro infix ""
+  [operand1 operator operand2]
+  (list operator operand1 operand2))
+
+#_"
+        (letfn [one ([v] (let [[a op b] (take 3 v)]
+                           (op a b)
+                           ))]
+          (reduce one v))
+"
+
 ")
 
 (comment "

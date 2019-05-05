@@ -4,17 +4,6 @@
 (def worse [1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9])
 (def worse-n [1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9])
 
-#_(defmacro infix ""
-  [operand1 operator operand2]
-  (list operator operand1 operand2))
-
-#_"
-(letfn [one ([v] (let [[a op b] (take 3 v)]
-                     (op a b)
-                     ))]
-    (reduce one v))
-"
-
 (defn parse
   "parses a vector equation to number
     this could be an internal fn, while the external one
@@ -48,12 +37,10 @@
   (Integer/parseInt (str a b)))
 
 (defn split-seq [num-seq-string]
-  (if (= (count num-seq-string) 0)
-    [nil ""]
-    (let [[first-char & rest-chars] num-seq-string
-          first-num (one-char->int first-char)
-          rest-str (chars->str rest-chars)]
-      [first-num rest-str])))
+  (let [[first-char & rest-chars] num-seq-string
+        first-num (one-char->int first-char)
+        rest-str (chars->str rest-chars)]
+    [first-num rest-str]))
 
 (defn merge-last-num
   "merged last num only
