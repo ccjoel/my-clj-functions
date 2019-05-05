@@ -61,7 +61,6 @@
 
 (defn merge-last-num
   "merged last num only
-
   [1] 2 => 12
   [1 + 2] 3 => [1 + 23]
   "
@@ -71,7 +70,7 @@
     (conj (pop v) (concat-numbers (peek v) num))))
 
 (defn fun
-  "Insert the mathematical operators + or   -  before any of the digits in the
+  "Insert the mathematical operators + or - before any of the digits in the
   decimal numeric string 123456789
   such that the resulting mathematical expression adds up to 100
   example: 123 + 4 - 5 + 67 - 89 = 100"
@@ -85,7 +84,7 @@
      (when (= (parse acc) desired-result)
        (apply print acc)
        (print "\n"))
-     ;; else, branch out to -1, #, + or -
+     ;; else, branch out to 1, -1, #, + or -
      (let [[next-num queue] (split-seq num-string)
            branches (if (empty? acc)
                       [[next-num] [(* -1 next-num)]]
