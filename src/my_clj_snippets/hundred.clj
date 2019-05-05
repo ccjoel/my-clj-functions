@@ -53,10 +53,11 @@
     (conj (pop v) (concat-numbers (peek v) num))))
 
 (defn fun
-  "Insert the mathematical operators + or - before any of the digits in the
-  decimal numeric string 123456789
-  such that the resulting mathematical expression adds up to 100
-  example: 123 + 4 - 5 + 67 - 89 = 100"
+
+  "Given a number string and a result, returns an equation inserting + or 1 anywhere to equal to result
+   Example inputs: 123456789 and 100
+   Sample from output: 123 + 4 - 5 + 67 - 89 = 100"
+
   ([^java.lang.String num-string
     ^java.lang.Long desired-result]
    (fun num-string desired-result []))
@@ -74,3 +75,11 @@
                       [(merge-last-num acc next-num) (conj acc '+ next-num) (conj acc '- next-num)])]
        (doseq [branch branches]
          (fun queue desired-result branch))))))
+
+(defn sum-to-100
+  "Insert the mathematical operators + or - before any of the digits in the
+  decimal numeric string 123456789
+  such that the resulting mathematical expression adds up to 100
+  example: 123 + 4 - 5 + 67 - 89 = 100"
+  []
+  (fun "123456789" 100))
