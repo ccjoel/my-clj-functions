@@ -80,18 +80,15 @@
    (fun num-string desired-result []))
 
   ([num-string desired-result acc]
+   ;; end condition
    (if (empty? num-string) ;; works for both empty coll and empty str
-     (let [result (parse acc)]
-       (when (= result desired-result)
-         (apply print acc)
-         (print "\n")))
-     (do
-       (let [[next-num queue] (split-seq num-string)]
-         (if (empty? acc)
-           (do
-             (fun queue desired-result [next-num])
-             (fun queue desired-result [(* -1 next-num)]))
-           (do
-             (fun queue desired-result (merge-last-num acc next-num))
-             (fun queue desired-result (conj acc '+ next-num))
-             (fun queue desired-result (conj acc '- next-num)))))))))
+     (when (= (parse acc) desired-result)
+       (apply print acc)
+       (print "\n"))
+     ;; else, branch out to -1, #, + or -
+     (let [[next-num queue] (split-seq num-string)
+           branches (if (empty? acc)
+                      [[next-num] [(* -1 next-num)]]
+                      [(merge-last-num acc next-num) (conj acc '+ next-num) (conj acc '- next-num)])]
+       (doseq [branch branches]
+         (fun queue desired-result branch))))))
