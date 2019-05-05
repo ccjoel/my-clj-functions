@@ -5,10 +5,8 @@
 (def worse-n [1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9])
 
 (defn parse
-  "parses a vector equation to number
-    this could be an internal fn, while the external one
-   also has the precondition of being multiples of three..?
-  "
+  "Parses a vector equation to result number
+   Sample input: [123 '+ 4 '- 5 '+ 67 '- 89] ; = 100 ; output"
   [v]
   {:pre [(odd? (count v))]}
 
@@ -21,7 +19,6 @@
         result
         (recur (conj rest result))))))
 
-#_[123 + 4 - 5 + 67 - 89] ; = 100
 
 (defn chars->str
   "Given a collection of characters, return a concat string"
