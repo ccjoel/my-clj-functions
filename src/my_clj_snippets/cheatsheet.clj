@@ -12,6 +12,9 @@ Accumulator!
 12+4 match numbers and symbols?
 (read-string "(+ 1 2)") would work
 
+(clojure.pprint/cl-format nil "~r" 12345)
+=> "twelve thousand, three hundred forty-five"
+
 clojure.core/symbol?
 clojure.core/number?
 
@@ -74,3 +77,4 @@ shortcuts
 ,sb => loads entire buffer
 
 ")
+
