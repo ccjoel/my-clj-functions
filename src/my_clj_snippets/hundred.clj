@@ -65,7 +65,7 @@
      (when (= (parse acc) desired-result)
        (apply print acc)
        (print "\n"))
-     ;; else, branch out to 1, -1, #, + or -
+     ;; else, branch out to 1, -1, next-num, + or -
      (let [[next-num queue] (split-seq num-string)
            branches (if (empty? acc)
                       [[next-num] [(* -1 next-num)]]
