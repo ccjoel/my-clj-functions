@@ -1,5 +1,5 @@
 (ns my-clj-snippets.hundred
-  (require [clojure.string :refer [replace split]]))
+  (:require [clojure.string :refer [replace split]]))
 
 (def worse [1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9])
 (def worse-n [1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9])
