@@ -3,7 +3,7 @@
             [my-clj-snippets.coins.util :as u]))
 
 (defn amt->inexact-change "Returns non optimal coin change from specific amount.
-  Can return self coin."
+  Doesn't return self coin."
   ([amount]
    (amt->inexact-change amount []))
 
@@ -126,4 +126,15 @@ map call again this vector.
   ([purse]
    (get-change purse [purse]))
   ([purse purses] ;; [] and [[]]
-   nil))
+   (if (u/all-pennies? purse)
+     purses
+
+     (for [coin purse]
+          (amt->inexact-change coin)
+          )
+
+     #_(let [[head tail] purse]
+       next-purse (into purses (amt->inexact-change head))
+       )
+
+     )))

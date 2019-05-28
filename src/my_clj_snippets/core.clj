@@ -2,7 +2,6 @@
   (:require [clojure.reflect :refer [reflect]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
-
 (defn get-unicode-code-point-name
   "..."
   [code-point-hex]

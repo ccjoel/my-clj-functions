@@ -2,6 +2,7 @@
   (:require [my-clj-snippets.coins.const :as c]))
 
 (defn next-coin
+  "Given a coin, returns next highest coin value"
   [curr-coin]
   (some #(when (> % curr-coin) %) c/ordered-coins))
 

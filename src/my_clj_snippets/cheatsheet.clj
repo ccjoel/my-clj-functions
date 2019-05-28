@@ -6,7 +6,11 @@ Accumulator!
 
 (replace strin #"\s" "") ;; removes spaces...
 
-(use 'clojure.test)
+;; ' is the shortcut for quote
+user> (= 'a (quote a))
+true
+
+(doc quote)
 
 (clojure.test/function? cons)
 ; => true
@@ -29,6 +33,62 @@ defining meta map:
 
 ")
 
+(comment "Namespace Tools"
+         "
+(keys (ns-publics 'clojure.core))
+clojure.repl/doc
+clojure.repl/apropos: returns seq of all *loaded* namespaces that match
+(use 'clojure.test)
+;; create and change to user namespace, where we load repl tools
+(ns user)
+
+;; changes to already existing namespace
+(in-ns 'clojure.test)
+
+;; recommend to create a unknown namespace with ns first, then use in-ns
+;; for the whole bootstrap to occur
+
+;; display current used namespace
+*ns*
+
+clojure.core/find-var
+([sym])
+  Returns the global var named by the namespace-qualified symbol, or
+  nil if no var with that name.
+
+(ns-name *ns*)
+;; => user
+
+(ns-imports *ns*)
+(ns-imports 'clojure.test)
+
+(ns-interns 'user)
+;; => {->WereWolf #'user/->WereWolf,
+ clojuredocs #'user/clojuredocs,
+ help #'user/help,
+ jacob #'user/jacob,
+ map->Foo #'user/map->Foo,
+ a #'user/a,
+ are-all-answers? #'user/are-all-answers?,
+ find-name #'user/find-name,
+ map->WereWolf #'user/map->WereWolf,
+ ->Hand #'user/->Hand,
+ map->Hand #'user/map->Hand,
+ ->Foo #'user/->Foo,
+ map->point #'user/map->point,
+ user.proxy$java.lang.Object$SignalHandler$d8c00ec7
+ #'user/user.proxy$java.lang.Object$SignalHandler$d8c00ec7,
+ ->point #'user/->point,
+ c #'user/c,
+ purses-values #'user/purses-values,
+ cdoc #'user/cdoc,
+ my-hand #'user/my-hand,
+ foo #'user/foo,
+ all-Q-combinations #'user/all-Q-combinations,
+ b #'user/b,
+ apropos-better #'user/apropos-better}
+")
+
 (comment"
 12+4 match numbers and symbols?
 (read-string "(+ 1 2)") would work
@@ -40,14 +100,23 @@ clojure.core/symbol?
 clojure.core/number?
 
 (show java.awt.Graphics)
-(keys (ns-publics 'clojure.core))
-clojure.repl/doc, clojure.repl/apropos: returns seq of all *loaded* namespaces that match
-*ns*
+
+
+#'+
+#'clojure.core/+
+test> '+
+
+#'doc
+;; => #'clojure.repl/doc
+;; same as:
+(resolve 'doc)
+;; => #'clojure.repl/doc
 
 (javadoc java.lang.Integer)
 (doc name)
-(find-doc part-of-name)
+(find-doc part-of-name-or-actual-doc) ;; fuzzy search, really
 (source function-name)
+(dir clojure.test) ;; => sorted directory of public vars for this namespace
 
 (seq "123")
 => (\1 \2 \3)
@@ -235,6 +304,5 @@ a
 (def c (map->point {:x 10}))
 c
 => {:x 10, :y nil}
-
 
 ")
