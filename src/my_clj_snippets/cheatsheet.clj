@@ -1,6 +1,83 @@
 (ns my-clj-snippets.cheatsheet)
 
 (comment "
+cider-interrupt	C-c C-b	Interrupt any pending evaluations.
+
+java:
+
+(new String)
+; => ""
+
+(String.)
+; => ""
+
+(String. 'To Davey Jones's Locker with ye hardies')
+; => 'To Davey Jones's Locker with ye hardies'
+
+(java.util.Stack.)
+; => []
+
+(let [stack (java.util.Stack.)]
+  (.push stack 'Latest episode of Game of Thrones, ho!')
+  stack)
+; => ["Latest episode of Game of Thrones, ho!"]
+
+(System/getenv)
+{'USER' 'the-incredible-bulk'
+ 'JAVA_ARCH' 'x86_64'}
+
+(System/getProperty "user.dir")
+; => '/Users/dabulk/projects/dabook'
+
+(System/getProperty "java.version")
+; => '1.7.0_17'
+
+java.util.Date class because the online API documentation (available at http://docs.oracle.com/javase/7/docs/api/java/util/Date.html) is thorough. As a Clojure developer, you should know three features of this date class. First, Clojure allows you to represent dates as literals using a form like this:
+
+#inst '2016-09-19T20:40:02.733-00:00'
+Second, you need to use the java.util.DateFormat class if you want to customize how you convert dates to strings or if you want to convert strings to dates. Third, if you’re doing tasks like comparing dates or trying to add minutes, hours, or other units of time to a date, you should use the immensely useful clj-time library
+
+(let [file (java.io.File. "/")]
+   (println (.exists file))
+   (println (.canWrite file))
+   (println (.getPath file)))
+; => true
+; => false
+; => /
+
+(spit '/tmp/hercules-todo-list'
+'- kill dat lion brov
+         - chop up what nasty multi-headed snake thing")
+
+(comment "
+(slurp '/tmp/hercules-todo-list')
+
+; => '- kill dat lion brov
+         - chop up what nasty multi-headed snake thing'
+
+The with-open macro is another convenience: it implicitly closes a resource at the end of its body, ensuring that you don’t accidentally tie up resources by forgetting to manually close the resource. The reader function is a handy utility that, according to the clojure.java.io API docs, “attempts to coerce its argument to an open java.io.Reader.” This is convenient when you don’t want to use slurp, because you don’t want to try to read a resource in its entirety and you don’t want to figure out which Java class you need to use. You could use reader along with with-open and the line-seq function if you’re trying to read a file one line at a time. Here’s how you could print just the first item of the Hercules to-do list:
+
+(with-open [todo-list-rdr (clojure.java.io/reader '/tmp/hercules-todo-list')]
+  (println (first (line-seq todo-list-rdr))))
+; => - kill dat lion brov
+
+:dependencies [[org.clojure/clojure '1.7.0']
+                 [clj-time '0.9.0']
+                 [org.apache.commons/commons-email '1.3.3']]
+The main Clojure repository is Clojars (https://clojars.org/), and the main Java repository is The Central Repository (http://search.maven.org/)
+
+
+")
+
+(comment "
+
+(namespace 'bar) ;;=> nil
+(name 'bar) ;;=> "bar"
+
+(namespace 'foo/bar) ;;=> "foo"
+(name 'foo/bar) ;;=> "bar"
+
+java -jar target/uberjar/clojure-noob-0.1.0-SNAPSHOT-standalone.jar
 
 Accumulator!
 
@@ -44,6 +121,11 @@ clojure.repl/apropos: returns seq of all *loaded* namespaces that match
 
 ;; changes to already existing namespace
 (in-ns 'clojure.test)
+
+; rename 'clojure.repl/doc' to 'd'
+user=> (require '[clojure.repl :as r :refer [doc] :rename {doc d}])
+
+(use 'foo.bar :reload-all) ;; reloads all changes :)
 
 ;; recommend to create a unknown namespace with ns first, then use in-ns
 ;; for the whole bootstrap to occur
@@ -305,4 +387,60 @@ a
 c
 => {:x 10, :y nil}
 
+(def memo-sleepy-identity (memoize sleepy-identity))
+
 ")
+
+(comment "
+Clojure is built on the JVM.
+
+The JVM doesn't support first-class functions, or lambdas, out of the box. Every Clojure function, once it is compiled, becomes its own anonymous class from the perspective of the JVM. Each function is, technically, it's own type.
+
+The class it becomes implements IFn, but when you retrieve it's type, it gives you the name of the anonymous class which is different every time.
+
+(doc ifn?)
+-------------------------
+clojure.core/ifn?
+([x])
+  Returns true if x implements IFn. Note that many data structures
+  (e.g. sets and maps) implement IFn
+
+(-> "a" symbol resolve deref ifn?)   ;; => false
+(-> "map" symbol resolve deref ifn?) ;; => true
+
+(fn? a)
+;; => false
+(fn? map)
+;; => true
+
+(ifn? a)
+;; => false
+
+(ifn? map)
+;; => true
+")
+
+(comment
+  "
+fibo (0) = 0
+fibo (1) = 1
+fibo (2) = 1
+fibo (3) = 2
+fibo (4) = 3
+fibo (5) = 5
+fibo (6) = 8
+0 + 1 + 1 + 2 + 3 + 5 + 8
+")
+
+(defn fibo
+  [n]
+  (if (< n 2)
+    n
+    (+ (fibo (- n 1)) (fibo (- n 2)))))
+
+(defn !
+  "Factorial"
+  [k]
+  (if (= k 1)
+    1
+    (* k (! (- k 1)))))

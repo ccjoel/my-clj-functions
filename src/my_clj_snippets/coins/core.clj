@@ -1,6 +1,10 @@
 (ns my-clj-snippets.coins.core
   (:require [my-clj-snippets.coins.const :as c]
-            [my-clj-snippets.coins.util :as u]))
+            [my-clj-snippets.coins.util :as u])
+  (:gen-class))
+
+;; Tree ?
+;; mappings?
 
 (defn amt->inexact-change "Returns non optimal coin change from specific amount.
   Doesn't return self coin."
@@ -26,9 +30,7 @@
 
 (defn inexact-change? [amount coin]
   (and
-
    (not (some nil? [amount coin]))
-
    (not= amount coin)
    (>= (- amount coin) 0)))
 
@@ -122,7 +124,7 @@ map call again this vector.
  not all 1? for each, to coins
 "
 
-(defn get-change
+#_(defn get-change
   ([purse]
    (get-change purse [purse]))
   ([purse purses] ;; [] and [[]]

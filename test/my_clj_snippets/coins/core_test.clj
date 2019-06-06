@@ -1,15 +1,16 @@
 (ns my-clj-snippets.coins.core-test
   (:require [my-clj-snippets.coins.core
              :refer [amt->change
-                     get-change
+                     #_get-change
                      amt->inexact-change]]
             [clojure.test :refer :all]))
 
 (deftest amt->change-test
   (testing "returns optimal change to return from cash"
 
-    (is (= (amt->change 100)
-           [25 25 25 25])) ;; four quarters
+    ;; expects first, then actual
+    (is (= [25 25 25 25]
+         (amt->change 100))) ;; four quarters
 
     (is (= (amt->change 5)
            [5]))
@@ -55,7 +56,7 @@
 (defn- are-all-answers? [purses]
   (count (set (purses-values purses))))
 
-(deftest get-change-test
+#_(deftest get-change-test
   (testing "returns all possible purses from parallel universes that could contain the input amount"
     (are [a b] (= a b)
-      (get-change [10]) all-D-combinations)))
+      all-D-combinations (get-change [10]))))

@@ -1,5 +1,6 @@
 (ns my-clj-snippets.coins.util
-  (:require [my-clj-snippets.coins.const :as c]))
+  (:require [my-clj-snippets.coins.const :as c])
+  (:gen-class))
 
 (defn next-coin
   "Given a coin, returns next highest coin value"
