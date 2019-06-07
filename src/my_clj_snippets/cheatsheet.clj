@@ -444,3 +444,31 @@ fibo (6) = 8
   (if (= k 1)
     1
     (* k (! (- k 1)))))
+
+(defn multiple? [n divisor]
+  (zero? (mod n divisor)))
+
+(defn fizzbuzzize! [n]
+  (cond-> nil
+    (multiple? n 3) (str "Fizz")
+    (multiple? n 5) (str "Buzz")
+    :always (or (str n))))
+
+(defn fizzbuzz
+  "print numbers 1 to 100 inclusive
+   if multiple of 3 print fizz instead
+   if multiple of 5 print buzz instead
+   if multiple of both print fizzbuzz instead"
+  [start end]
+  (dorun (map #(println (fizzbuzzize! %))
+              (range start (inc end)))))
+
+(defn fb
+  [start end]
+  (doseq [k (range start (inc end))]
+    (println (fizzbuzzize! k))))
+
+(comment "
+use: (fizzbuzz 1 100)
+or:  (fb 1 100)
+")
