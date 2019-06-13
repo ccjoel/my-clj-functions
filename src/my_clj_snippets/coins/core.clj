@@ -4,10 +4,12 @@
   (:gen-class))
 
 
-(defn amt->change "Returns optimal coin change from specific amount.
-  Can return self coin."
+(defn get-coins "Returns optimal coin change from specific amount.
+  But! Can return self coin if provided a coin value.
+  Example: fn(25) -> [25]. fn(15) -> [10 5]
+  "
   ([amount]
-   (amt->change amount []))
+   (get-coins amount []))
 
   ([amount acc]
    (if (zero? amount)
@@ -15,30 +17,37 @@
      (let [highest-coin (u/highest-coin-that-fits amount)]
        (recur (- amount highest-coin) (conj acc highest-coin))))))
 
-(defn amt->change-p [value]
+(defn get-change
+  "Given any $ amount, returns optimal change.
+  Always provides change. That is, if given a quarter (25) Q,
+  will return [10 10 5]."
+  [value]
   (cond
     (u/is-coin? value) (c/mappings value)
-    :else (amt->change value)))
-
-
-;; (defmulti )
+    :else (get-coins value)))
 
 (defn coin-cha
   "coin challenge
    should be replaced with loop, recur
+   TODO this should be fully recur and yield one result: a set (no duplicates)
   "
-  ([purse]
-   (coin-cha purse []))
-  ([purse acc]
-   (if (u/all-pennies? purse)
-     (println acc)
-     (doseq [[money idx] (map vector purse (range))]
-       (when (not (u/is-penny? money))
-         (let [new-purse (u/fit-coll purse idx (amt->change-p money))]
-           (coin-cha new-purse (conj acc new-purse))))))))
+  [purse acc]
+  (if (u/all-pennies? purse)
+    (println acc)
+    (doseq [[money idx] (map vector purse (range))]
+      (when (not (u/is-penny? money))
+        (let [new-purse (u/fit-coll purse idx (get-change money))]
+          (coin-cha new-purse (conj acc new-purse)))))))
 
+(defmulti coin-challenge vector?)
 
+(defmethod coin-challenge true
+  [purse]
+  (coin-cha purse []))
 
+(defmethod coin-challenge false
+  [value]
+  (coin-cha [value] []))
 
 
 (comment "
