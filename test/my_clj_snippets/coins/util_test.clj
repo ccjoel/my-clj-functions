@@ -1,7 +1,8 @@
 (ns my-clj-snippets.coins.util-test
   (:require [my-clj-snippets.coins.util :refer [prev-coin next-coin
-                                                #_inexact-change? all-pennies?
+                                                all-pennies?
                                                 highest-coin-that-fits
+                                                fit-coll
                                                 contains-non-pennies?
                                                 ]]
             [clojure.test :refer :all]))
@@ -28,16 +29,6 @@
     (is (= (next-coin 5))
         10)))
 
-
-#_(deftest inexact-change?-test
-  (testing "returns true or fale if the change is exact"
-    (is (inexact-change? 10 5))
-    (is (false? (inexact-change? 5 5)))
-
-    (is (false? (inexact-change? 5 nil)))
-
-    (is (false? (inexact-change? nil 5)))))
-
 (deftest all-pennies?-test
   (testing "returns true if purse only has pennies. sounds sad"
     (is (all-pennies? [1 1 1 1]))
@@ -55,3 +46,8 @@
   (testing "true if your purse contains at least one non penny, false if only pennies in purse"
     (is (contains-non-pennies? [1 5 1 10]))
     (is (false? (contains-non-pennies? [1 1 1 1])))))
+
+(deftest fit-coll-test
+  (testing "fits a coll inside coll"
+    (are [a b] (= a b)
+      [25 10 10 5 25] (fit-coll [25 25 25] 1 [10 10 5]))))

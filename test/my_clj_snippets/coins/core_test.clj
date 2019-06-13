@@ -1,11 +1,7 @@
 (ns my-clj-snippets.coins.core-test
   (:require [my-clj-snippets.coins.core
              :refer [amt->change
-                     #_get-change
-                     amt->change-p
-                     fit-in
-                     fit-coll
-                     amt->inexact-change]]
+                     amt->change-p]]
             [clojure.test :refer :all]))
 
 (deftest amt->change-p-test
@@ -40,16 +36,6 @@
 
     (is (= [] (amt->change 0)))))
 
-(deftest amt->inexact-change-test
-  ;; (use-fixtures :once
-  ;;   {:before (fn [] ...)
-  ;;    :after  (fn [] ...)})
-  (testing "returns all combinations of coin change for an amount"
-    (are [a b] (= a b)
-      [25 25 25 10 10 1 1 1 1 1] (amt->inexact-change 100)
-      [10 10 1 1 1 1 1] (amt->inexact-change 25)
-      [10 1] (amt->inexact-change 11))))
-
 ;; 13 so far
 (def ^:const all-Q-combinations
   #{[25] [10 10 5] [10 5 5 5] [5 5 5 5 5]
@@ -69,19 +55,3 @@
 
 (defn- are-all-answers? [purses]
   (count (set (purses-values purses))))
-
-#_(deftest get-change-test
-  (testing "returns all possible purses from parallel universes that could contain the input amount"
-    (are [a b] (= a b)
-      all-D-combinations (get-change [10]))))
-
-(deftest fit-in-test
-  (testing "fits an item inside coll"
-    (are [a b] (= a b)
-      [1 2 6 4] (fit-in [1 2 3 4] 2 6)
-      )))
-
-(deftest fit-coll-test
-  (testing "fits a coll inside coll"
-    (are [a b] (= a b)
-      [25 10 10 5 25] (fit-coll [25 25 25] 1 [10 10 5]))))

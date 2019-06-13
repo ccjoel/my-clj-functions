@@ -20,7 +20,23 @@
 (defn all-pennies? [purse]
   (every? is-penny? purse))
 
+(def contains-non-pennies? (complement all-pennies?))
+
 (defn is-coin? [value]
   (not (nil? (c/coin-set value))))
 
-(def contains-non-pennies? (complement all-pennies?))
+(defn fit-coll
+  "replace in place:
+   So that this is possible: [25 25 4] -> [10 10 5 25 4]"
+  [vector index coll]
+  (concat (take index vector)
+          coll
+          (drop (inc index) vector)))
+
+
+
+#_(defn inexact-change? [amount coin]
+  (and
+   (not (some nil? [amount coin]))
+   (not= amount coin)
+   (>= (- amount coin) 0)))
