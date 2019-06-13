@@ -8,10 +8,11 @@
 (def ^:const U 100)
 
 (def ^:const mappings
-  {P [[1]]
-   N [[5] [1 1 1 1 1]]
-   D [[10] [5 5]]
-   Q [[25] [10 10 5]]})
+  {P [1]
+   N [1 1 1 1 1]
+   D [5 5]
+   Q [10 10 5]
+   })
 
 (def ^:const ordered-coins [P N D Q])
 (def ^:const inv-ordered-coins (reverse ordered-coins))

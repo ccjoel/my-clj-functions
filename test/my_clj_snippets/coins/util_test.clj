@@ -39,8 +39,9 @@
     (is (false? (inexact-change? nil 5)))))
 
 (deftest all-pennies?-test
-  (testing "returns true if purse only has pennies :-("
+  (testing "returns true if purse only has pennies. sounds sad"
     (is (all-pennies? [1 1 1 1]))
+    (is (all-pennies? [1]))
     (is (false? (all-pennies? [1 1 1 5 10])))))
 
 (deftest highest-coin-that-fits-test

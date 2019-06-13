@@ -20,4 +20,7 @@
 (defn all-pennies? [purse]
   (every? is-penny? purse))
 
+(defn is-coin? [value]
+  (not (nil? (c/coin-set value))))
+
 (def contains-non-pennies? (complement all-pennies?))

@@ -34,6 +34,65 @@
    (not= amount coin)
    (>= (- amount coin) 0)))
 
+(defn amt->change-p [value]
+  (cond
+    (u/is-coin? value) (c/mappings value)
+    :else (amt->change value)))
+
+(comment "
+   maps through vector
+   sample input [26] (if 26, surround by []), acc = []
+   if all Penny, done, return acc; which is a set.
+   else, if first mapped element is higer than a coin, convert to coin equivalent
+   the result of first fn is added to acc, then we call the resulting vector recursively
+   so [26] -> [25 1], this version is easy
+   now the input is [25 1] we map again. for each one that isnt a penny, get the conversion of it so:
+   [25 1] -> [10 10 5 1]; add to acc. then recur again with this result.
+   ;; ^ this is key, 25 doesnt return a 25 coin, but the next coin.
+   ;; ^ we insert into original vector, so that they are merged and not nested vectors.
+   [10 10 5 1] -> [5 5 10 5 1] call again, but also rest of mapped elements in vector:
+                  [5 5 5 5 5 1]
+                  [1 1 1 1 1 5 5 5 5 1]
+                  [1 1 1 1 1 1 1 1 1 1 5 5 5 1]
+                  [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 5 5 1]
+                  [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 5 1]
+                  [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+          all intermediary states are called by map and recur for each elem.
+          hopefully acc covers everything when we're done. else, with no acc, just print each yielding result..
+")
+
+(comment "
+replace in place:
+[25 25 4] -> [10 10 5 25 4]
+")
+
+(defn fit-in [vector index item]
+  (concat (take index vector)
+          [item]
+          (drop (inc index) vector)))
+
+(defn fit-coll [vector index coll]
+  (concat (take index vector)
+          coll
+          (drop (inc index) vector)))
+
+(defn coin-cha
+  "coin challenge"
+  [purse]
+  (if (u/all-pennies? purse)
+    nil
+    (map-indexed (fn [idx money] (when (not (u/is-penny? money))
+                                   (println "letting")
+                                   (let [res (fit-coll purse idx (amt->change-p money))]
+                                     (println res)
+                                     ;; (println (fit-coll purse idx res))
+                                     (coin-cha res)
+                                     ;; should call with replaced in place result, not just current coins
+                                     )))
+                 purse))
+  )
+
+
 #_(defn get-change-v1
   ;; (let) [purse (amt->change amount)] ;; 100 -> now [25 25 25 25]
 

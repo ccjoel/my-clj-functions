@@ -2,8 +2,25 @@
   (:require [my-clj-snippets.coins.core
              :refer [amt->change
                      #_get-change
+                     amt->change-p
+                     fit-in
+                     fit-coll
                      amt->inexact-change]]
             [clojure.test :refer :all]))
+
+(deftest amt->change-p-test
+  (testing "perfect change"
+    (are [a b] (= a b)
+      [25 25 25 25] (amt->change-p 100)
+      [25 25 25 25 1] (amt->change-p 101)
+      [10 10 5] (amt->change-p 25)
+      [25 1] (amt->change-p 26)
+      [1] (amt->change-p 1)
+      [10 1 1] (amt->change-p 12)
+      [10 1 1 1 1] (amt->change-p 14)
+      [25 10 5 1 1] (amt->change-p 42)
+      [25 25 25 1 1 1 1] (amt->change-p 79)
+      [25 25 25 5] (amt->change-p 80))))
 
 (deftest amt->change-test
   (testing "returns optimal change to return from cash"
@@ -12,19 +29,16 @@
     (is (= [25 25 25 25]
          (amt->change 100))) ;; four quarters
 
-    (is (= (amt->change 5)
-           [5]))
+    (is (= [5] (amt->change 5)))
 
-    (is (= (amt->change 6)
-           [5 1])
+    (is (= [5 1] (amt->change 6))
         "Optimal change for $0.06 USD should be a Nickel and a Penny")
 
-    (is (= (amt->change 34)
-           [25 5 1 1 1 1]))
+    (is (= [25 5 1 1 1 1] (amt->change 34)))
 
-    (is (= (amt->change 1) [1]))
+    (is (= [1] (amt->change 1)))
 
-    (is (= (amt->change 0) []))))
+    (is (= [] (amt->change 0)))))
 
 (deftest amt->inexact-change-test
   ;; (use-fixtures :once
@@ -32,9 +46,9 @@
   ;;    :after  (fn [] ...)})
   (testing "returns all combinations of coin change for an amount"
     (are [a b] (= a b)
-      (amt->inexact-change 100)  [25 25 25 10 10 1 1 1 1 1]
-      (amt->inexact-change 25)   [10 10 1 1 1 1 1]
-      (amt->inexact-change 11)   [10 1])))
+      [25 25 25 10 10 1 1 1 1 1] (amt->inexact-change 100)
+      [10 10 1 1 1 1 1] (amt->inexact-change 25)
+      [10 1] (amt->inexact-change 11))))
 
 ;; 13 so far
 (def ^:const all-Q-combinations
@@ -60,3 +74,14 @@
   (testing "returns all possible purses from parallel universes that could contain the input amount"
     (are [a b] (= a b)
       all-D-combinations (get-change [10]))))
+
+(deftest fit-in-test
+  (testing "fits an item inside coll"
+    (are [a b] (= a b)
+      [1 2 6 4] (fit-in [1 2 3 4] 2 6)
+      )))
+
+(deftest fit-coll-test
+  (testing "fits a coll inside coll"
+    (are [a b] (= a b)
+      [25 10 10 5 25] (fit-coll [25 25 25] 1 [10 10 5]))))
