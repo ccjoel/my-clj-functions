@@ -28,12 +28,17 @@
 (defn fit-coll
   "replace in place:
    So that this is possible: [25 25 4] -> [10 10 5 25 4]"
-  [vector index coll]
-  (concat (take index vector)
+  [vect index coll]
+  (concat (take index vect)
           coll
-          (drop (inc index) vector)))
+          (drop (inc index) vect)))
 
+(defn fit-coll-slower?
+  [coll pos m]
+  (concat (subvec coll 0 pos) m (subvec coll (inc pos))))
 
+(defn vector-with-index [v]
+  (map vector v (range)))
 
 #_(defn inexact-change? [amount coin]
   (and

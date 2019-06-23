@@ -3,7 +3,6 @@
             [my-clj-snippets.coins.util :as u])
   (:gen-class))
 
-
 (defn get-coins "Returns optimal coin change from specific amount.
   But! Can return self coin if provided a coin value.
   Example: fn(25) -> [25]. fn(15) -> [10 5]
@@ -26,29 +25,34 @@
     (u/is-coin? value) (c/mappings value)
     :else (get-coins value)))
 
-(defn coin-cha
-  "coin challenge
-   should be replaced with loop, recur
-   TODO this should be fully recur and yield one result: a set (no duplicates)
+;; Universe of all possible purses
+(def universe (atom #{}))
+
+(defn rr [] (reset! universe #{}))
+
+(defn coin-correct
+  "coin challenge 3.1
+  prints combs, updates universe of purses
+  best
   "
-  [purse acc]
-  (if (u/all-pennies? purse)
-    (println acc)
-    (doseq [[money idx] (map vector purse (range))]
+  [purse]
+  (when (not (u/all-pennies? purse))
+    (doseq [[money idx] (u/vector-with-index purse)]
       (when (not (u/is-penny? money))
-        (let [new-purse (u/fit-coll purse idx (get-change money))]
-          (coin-cha new-purse (conj acc new-purse)))))))
+        (let [result (u/fit-coll purse idx (get-change money))]
+          (swap! universe conj result)
+          (println result)
+          (coin-correct result))))))
 
 (defmulti coin-challenge vector?)
 
 (defmethod coin-challenge true
   [purse]
-  (coin-cha purse []))
+  (coin-correct purse))
 
 (defmethod coin-challenge false
   [value]
-  (coin-cha [value] []))
-
+  (coin-correct [value]))
 
 (comment "
    Tree ?
@@ -84,4 +88,6 @@
                   [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
           all intermediary states are called by map and recur for each elem.
           hopefully acc covers everything when we're done. else, with no acc, just print each yielding result..
+
+map-indexed
 ")
