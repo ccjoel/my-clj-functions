@@ -31,17 +31,17 @@
 (defn rr [] (reset! universe #{}))
 
 (defn coin-correct
-  "coin challenge 3.1
-  prints combs, updates universe of purses
-  best
+  "inefficient coin challenge
+   meh... don't have the energy to optimize algorithm or
+   convert to tail position or completely immutable \o/
   "
   [purse]
   (when (not (u/all-pennies? purse))
     (doseq [[money idx] (u/vector-with-index purse)]
       (when (not (u/is-penny? money))
-        (let [result (u/fit-coll purse idx (get-change money))]
-          (swap! universe conj result)
+        (let [result (sort (u/fit-coll purse idx (get-change money)))]
           (println result)
+          (swap! universe conj result)
           (coin-correct result))))))
 
 (defmulti coin-challenge vector?)
@@ -54,8 +54,19 @@
   [value]
   (coin-correct [value]))
 
+(defn main
+  "converts any value to all possible coin combinations
+   This is slow. Uses set atom: resets atom and populate it, returns output,
+   which will print result when running on repl."
+  [i]
+  (rr)
+  (coin-challenge i)
+  @universe)
+
 (comment "
-   Tree ?
+   brainstorming...
+
+   Could implement tree, then traverse depth-first, but... I'll cowboy this and:
 
    maps through vector
    sample input [26] (if 26, surround by []), acc = []

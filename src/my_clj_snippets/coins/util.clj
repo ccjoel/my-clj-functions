@@ -33,12 +33,12 @@
           coll
           (drop (inc index) vect)))
 
-(defn fit-coll-slower?
-  [coll pos m]
-  (concat (subvec coll 0 pos) m (subvec coll (inc pos))))
-
 (defn vector-with-index [v]
   (map vector v (range)))
+
+;; (defn fit-coll-slower?
+;;   [coll pos m]
+;;   (concat (subvec coll 0 pos) m (subvec coll (inc pos))))
 
 #_(defn inexact-change? [amount coin]
   (and
