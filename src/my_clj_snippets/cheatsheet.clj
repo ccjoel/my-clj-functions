@@ -1,7 +1,8 @@
 (ns my-clj-snippets.cheatsheet)
 
 (comment "
-cider-interrupt	C-c C-b	Interrupt any pending evaluations.
+cider-interrupt	C-c C-b	Interrupt any pending evaluations. only when not in repl buffer
+or when in repl buffer: C-c C-c
 
 java:
 
