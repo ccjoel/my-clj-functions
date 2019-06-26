@@ -33,7 +33,7 @@
 (defn coin-correct
   "inefficient coin challenge
    meh... don't have the energy to optimize algorithm or
-   convert to tail position or completely immutable \o/
+   convert to tail position or completely immutable
   "
   [purse]
   (when (not (u/all-pennies? purse))
