@@ -1,11 +1,14 @@
 (ns codewars.core)
 
-(defn next-num [n]
-  (apply * (map #(-> % str Integer/parseInt) (seq (str n)))))
+(defn multiply-digits [n]
+  (apply *
+         (map
+          #(Character/digit % 10)
+          (seq (str n)))))
 
 (defn persistence [n]
   (loop [num n
-         runs 1]
-    (if (< n 10)
+         runs 0]
+    (if (< num 10)
       runs
-      (recur (next-num n) (inc runs)))))
+      (recur (multiply-digits num) (inc runs)))))
