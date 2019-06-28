@@ -57,3 +57,24 @@
 
 (defn scramble [s1 s2]
   (empty? (reduce #(clojure.string/replace-first %1 %2 "") s2 s1)))
+
+;; ------
+
+;; (defn n->num-seq [n]
+;;   (map-indexed #(Math/pow (Character/digit %2 10) (inc %1)) (str n)))
+
+(defn n->num-seq [n]
+  (map-indexed #(->> %1 inc
+                     (Math/pow (Character/digit %2 10))
+                     int)
+               (str n)))
+
+(defn eureka? [n]
+  (=
+   (apply + (n->num-seq n))
+   n))
+
+(defn sum-dig-pow [start end]
+  (filter eureka? (range start (inc end))))
+
+;; --------
