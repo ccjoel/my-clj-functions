@@ -1,4 +1,4 @@
-(ns find-the-odd-int)
+(ns codewars.find-the-odd-int)
 
 (defn find-odd [numbers]
   (->

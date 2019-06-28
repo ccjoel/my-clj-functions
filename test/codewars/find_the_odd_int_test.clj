@@ -1,5 +1,5 @@
-(ns find-the-odd-int-test
-  (:require [find-the-odd-int :refer [count-num vec->str find-odd]]
+(ns codewars.find-the-odd-int-test
+  (:require [codewars.find-the-odd-int :refer [count-num vec->str find-odd]]
             [clojure.test :refer :all]))
 
 (deftest count-num-test
