@@ -78,3 +78,25 @@
   (filter eureka? (range start (inc end))))
 
 ;; --------
+
+(comment "
+    ;; someday solve min/max nested tree data
+
+{:id "cluster0"
+ :value 10
+ :children
+ [{:id "keyspace1"
+  :value 9
+  :children
+  [{:id "table1"
+   :value 8
+   :children
+   [{:id "datacenter1"
+    :value 7
+    :children
+    [{:id "node1"
+     :value 5
+     }]}]}]}]}
+
+
+")
