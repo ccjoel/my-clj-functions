@@ -2,14 +2,23 @@
 
 (defn groupy
   "Implements group-by. See (doc group-by)"
-  [fn v]
-  (loop [item (first v)
+  [f v]
+  (loop [in v
          acc {}]
-    (if item
-      (let [result (fn item)]
-        (recur (rest v)
-               (assoc acc result
-                      (conj (or (get acc result)
-                                [])
-                            item))))
-      acc)))
+    (let [item (first in)]
+      (if item
+        (let [result (f item)]
+          (recur (rest in)
+                 (assoc acc result
+                        (conj (or (get acc result)
+                                  [])
+                              item))))
+        acc))))
+
+;; other's solution
+(fn [f d]
+  (loop [data d accum {}]
+    (if (empty? data) accum
+        (recur (rest data)
+               (merge-with concat accum
+                           {(f (first data)) (vector (first data))} )))))
