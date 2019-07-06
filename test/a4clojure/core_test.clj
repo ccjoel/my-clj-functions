@@ -1,5 +1,5 @@
 (ns a4clojure.core-test
-  (:require [a4clojure.core :refer [groupy]]
+  (:require [a4clojure.core :refer [groupy tree?]]
             [clojure.test :refer :all]))
 
 (deftest groupy-test
@@ -16,3 +16,29 @@
     (is (= (groupy count [[1] [1 2] [3] [1 2 3] [2 3]])
            {1 [[1] [3]], 2 [[1 2] [2 3]], 3 [[1 2 3]]}))))
 
+
+
+(deftest tree?-test
+  (testing "tree?... lef right and nil"
+
+    (is (= (tree? '(:a (:b nil nil) nil))
+          true))
+    (is (= (tree? '(:a (:b nil nil)))
+           false))
+
+    (is (= (tree? [1 nil [2 [3 nil nil] [4 nil nil]]])
+           true))
+
+    (is (= (tree? [1 [2 nil nil] [3 nil nil] [4 nil nil]])
+           false))
+
+    (is (= (tree? [1 [2 [3 [4 nil nil] nil] nil] nil])
+           true))
+
+    (is (= (tree? [1 [2 [3 [4 false nil] nil] nil] nil])
+           false))
+
+    (is (= (tree? '(:a nil ()))
+           false))
+
+    (is (= (tree? [5 [2 [nil nil]] [3 [[7 nil nil] [8 7 nil]]]]) false))))
