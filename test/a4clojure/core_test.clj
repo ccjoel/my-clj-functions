@@ -19,10 +19,11 @@
 
 
 (deftest tree?-test
-  (testing "tree?... lef right and nil"
+  (testing "is tree?... needs a non-nil, non-coll non-bool value, and left and right leaves"
 
     (is (= (tree? '(:a (:b nil nil) nil))
           true))
+
     (is (= (tree? '(:a (:b nil nil)))
            false))
 
@@ -42,3 +43,4 @@
            false))
 
     (is (= (tree? [5 [2 [nil nil]] [3 [[7 nil nil] [8 7 nil]]]]) false))))
+

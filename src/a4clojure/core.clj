@@ -25,15 +25,19 @@
 
 ;; ----------------
 
-
 ;; (defn has-two-leaves? [st] nil)
+
+;; nil or coll
+(defn valid-leaves? [leaves]
+  (and (every? #(or (coll? %) (nil? %)) leaves)
+       (= (count leaves) 2)))
+
+(def invalid-leaves? (complement valid-leaves?))
 
 (defn tree?
   [t]
   (let [[value & leaves] t]
     (cond
-      (or (nil? value) (some false? leaves) (not= (count leaves) 2)) false
+      (or (nil? value) (invalid-leaves? leaves)) false
       (every? nil? leaves) true
-      :else  (cond
-               (some nil? leaves) (apply tree? (remove nil? leaves))
-               (every? coll? leaves) (every? true? (map tree? leaves))))))
+      :else  (every? true? (map tree? (filter coll? leaves))))))
