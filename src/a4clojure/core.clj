@@ -25,9 +25,6 @@
 
 ;; ----------------
 
-;; (defn has-two-leaves? [st] nil)
-
-;; nil or coll
 (defn valid-leaves? [leaves]
   (and (every? #(or (coll? %) (nil? %)) leaves)
        (= (count leaves) 2)))
@@ -36,8 +33,52 @@
 
 (defn tree?
   [t]
-  (let [[value & leaves] t]
-    (cond
-      (or (nil? value) (invalid-leaves? leaves)) false
-      (every? nil? leaves) true
-      :else  (every? true? (map tree? (filter coll? leaves))))))
+  (try
+    (let [[value & leaves] t]
+      (cond
+        (or (nil? value) (invalid-leaves? leaves)) false
+        (every? nil? leaves) true
+        :else  (every? true? (map tree? (filter coll? leaves)))))
+    (catch IllegalArgumentException ile false)))
+
+;; (defn print-tree [t]
+;;   (let)
+;;   )
+
+;; --- implement partition
+
+(defn my-partition [amt sequ]
+  (loop [se sequ
+         acc []]
+    (let [[taken cdr] (split-at amt se)]
+      (if (< (count taken) amt)
+        acc
+        (recur cdr (conj acc taken))))))
+
+(defn my-partition-2
+  ([amt sequ]
+   (my-partition-2 amt sequ []))
+  ([amt sequ acc]
+   (let [[taken cdr] (split-at amt sequ)]
+     (if (< (count taken) amt)
+       acc
+       (recur amt cdr (conj acc taken))))))
+
+(defn my-partition-3 [amt sequ]
+  (loop [[taken cdr] (split-at amt sequ)
+         acc []]
+    (if (< (count taken) amt)
+      acc
+      (recur (split-at amt cdr) (conj acc taken)))))
+
+(defn my-partition-4 [amt sequ]
+  (if (> amt (count sequ))
+    '()
+    (cons (take amt sequ)
+          (my-partition-4 amt (drop amt sequ)))))
+
+(defn my-partition-5 [n sequ]
+  (loop [xs sequ acc []]
+    (if (< (count xs) n) ;; runs count on this list. Is this potentially inefficient?
+      acc
+      (recur (drop n xs) (conj acc (take n xs))))))

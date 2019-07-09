@@ -79,6 +79,17 @@
 
 ;; --------
 
+;; Bit Counting
+
+(defn count-1-bits [n]
+  (count (remove #(zero? (Character/digit % 10)) (Integer/toString n 2))))
+
+;; or:
+(defn count-bits [n]
+  (Integer/bitCount n))
+
+;; -------
+
 (comment "
     ;; someday solve min/max nested tree data
 
@@ -100,3 +111,4 @@
 
 
 ")
+
