@@ -1,5 +1,5 @@
 (ns my-clj-snippets.hundred
-  (:require [clojure.string :refer [replace split]]))
+  (:require [clojure.string :refer [replace split join]]))
 
 (def worse [1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9])
 (def worse-n [1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9])
@@ -14,18 +14,17 @@
     (first v)
 
     (let [[a op b & rest] v
-          result (@(resolve op) a b)] ;; received + and - operators as symbols to resolve, easier to print
+          result (@(resolve op) a b)] ;; receives + and - operators as symbols to resolve, easier to print
       (if (nil? rest)
         result
         (recur (conj rest result))))))
 
-
 (defn chars->str
-  "Given a collection of characters, return a concat string"
+  "Given a coll of characters, returns a concatenated string"
   [char-coll]
   (apply str char-coll))
 
-(defn one-char->int
+(defn char->int
   [i]
   (Integer/parseInt (str i)))
 
@@ -35,7 +34,7 @@
 
 (defn split-seq [num-seq-string]
   (let [[first-char & rest-chars] num-seq-string
-        first-num (one-char->int first-char)
+        first-num (char->int first-char)
         rest-str (chars->str rest-chars)]
     [first-num rest-str]))
 
@@ -49,15 +48,18 @@
     [num]
     (conj (pop v) (concat-numbers (peek v) num))))
 
-(defn fun
+(defn gen-equation
 
-  "Given a number string and a result, returns an equation inserting + or 1 anywhere to equal to result
-   Example inputs: 123456789 and 100
-   Sample from output: 123 + 4 - 5 + 67 - 89 = 100"
+  "Given a number string and a result, inserts + or - anywhere to generate an equation for result.
+   Prints output of all equations that equal desired result.
+
+   Example inputs: \"123456789\" and 100
+   Sample printed output: 123 + 4 - 5 + 67 - 89
+   (which equals to 100)"
 
   ([^java.lang.String num-string
     ^java.lang.Long desired-result]
-   (fun num-string desired-result []))
+   (gen-equation num-string desired-result []))
 
   ([num-string desired-result acc]
    ;; end condition
@@ -71,12 +73,34 @@
                       [[next-num] [(* -1 next-num)]]
                       [(merge-last-num acc next-num) (conj acc '+ next-num) (conj acc '- next-num)])]
        (doseq [branch branches]
-         (fun queue desired-result branch))))))
+         (gen-equation queue desired-result branch))))))
+
+#_(join " " [123 '+ 4 '- 5 '+ 67 '- 89])
 
 (defn sum-to-100
-  "Insert the mathematical operators + or - before any of the digits in the
+  "Programming exercise solution:
+  Insert the mathematical operators + or - before any of the digits in the
   decimal numeric string 123456789
   such that the resulting mathematical expression adds up to 100
-  example: 123 + 4 - 5 + 67 - 89 = 100"
+  example: 123 + 4 - 5 + 67 - 89 = 100
+
+  Yields all possible combinations."
   []
-  (fun "123456789" 100))
+  (gen-equation "123456789" 100))
+
+(comment "For the curious, calling (sum-to-100 yields:
+
+123 + 45 - 67 + 8 - 9
+123 + 4 - 5 + 67 - 89
+123 - 45 - 67 + 89
+123 - 4 - 5 - 6 - 7 + 8 - 9
+12 + 3 + 4 + 5 - 6 - 7 + 89
+12 + 3 - 4 + 5 + 67 + 8 + 9
+12 - 3 - 4 + 5 - 6 + 7 + 89
+1 + 23 - 4 + 56 + 7 + 8 + 9
+1 + 23 - 4 + 5 + 6 + 78 - 9
+1 + 2 + 34 - 5 + 67 - 8 + 9
+1 + 2 + 3 - 4 + 5 + 6 + 78 + 9
+-1 + 2 - 3 + 4 + 5 + 6 + 78 + 9
+
+")
